@@ -1,7 +1,7 @@
 class AuthenticationService{
     registerSuccessfulLogin(userName, password){
         sessionStorage.setItem('authenticatedUser',userName)
-        console.log(this.isUserLoggedIn)
+       
     }
 
     logOut(userName, password){
