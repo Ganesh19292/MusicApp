@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var con = require('./database');
-var cors = require('cors')
-app.use(cors()) 
+
 
 
 /* GET home page. */
 router.get('/api/v1/songs', function(req, res, next) {
   //res.render('index', { title: 'Express' });
+  res.setHeader('Access-Control-Allow-Origin', '*');
   con.query("SELECT * FROM songs", function (err, result, fields) {
     if (err) throw err;
     return res.json(result);
