@@ -6,25 +6,35 @@ import axios from 'axios'
 class SongsList extends Component {
     constructor() {
         super();
+        this.state={
+            songs: []
+        }
 
     }
     renderSongs() {
-         axios.get("http://localhost:4000/api/v1/songs").then(res => {
-            let result = ""
-        for (let i = 0; i < res.data.length; i++) {
-            result = <tr><td>{res.data[i].songtitle}<br />{res.data[i].singers}<br />{res.data[i].album}<br /><br /></td><td>{res.data[i].playtime}</td></tr>
+        if(this.state.songs == null)
+            return null;
 
-        }
-        console.log(result)
-        return result
+         return this.state.songs.map(song => {
+             return (
+                 <tr key={song.songtitle}>
+                     <td>
+                         {song.songtitle} <br/>
+                         {song.singers} <br/>
+                         {song.album}
+                     </td>
+                     <td>
+                         {song.playtime}
+                     </td>
+                 </tr>
+             );
+         })
             // this.setState({ allSongs: res.data })
-            
-        });
-        
-        
+
+
+
     }
     render() {
-
         return (
             <div>
                 <div className="container">
@@ -42,6 +52,21 @@ class SongsList extends Component {
                 </div>
             </div>
         );
+    }
+
+    shuffleArray = (array) => {
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+
+    componentDidMount() {
+        axios.get("http://localhost:4000/api/v1/songs").then(res => {
+            this.setState({songs: res.data});
+        });
     }
 
 }

@@ -17,7 +17,7 @@ con.connect(function(err) {
         console.log("Table created");
     });
 
-    var newsql = "CREATE TABLE user_playlists (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), userid INT)";
+    var newsql = "CREATE TABLE user_playlists (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), username VARCHAR(255))";
     //var newsql = "DROP TABLE IF EXISTS user_playlists"
 
     con.query(newsql, function (err, result) {

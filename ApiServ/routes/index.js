@@ -14,16 +14,26 @@ router.get('/api/v1/songs', function(req, res, next) {
   });
 });
 
-router.post('/api/v1/playlist', function(req, res, next){
+router.options('/api/v1/playlist', function(req, res, next){
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type');
 
-  if(!req.body.user_id)
-    res.status(500).json({message: "user_id is not specified"});
-  var user_id = req.body.user_id;
+  res.send();
+});
+
+router.post('/api/v1/playlist', function(req, res, next){
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  if(!req.body.username)
+    res.status(500).json({message: "username is not specified"});
+  var username = req.body.username;
   if(!req.body.playlist_name)
     res.status(500).json({message: "playlistname is not specified"});
   var playlist_name = req.body.playlist_name;
 
-  var sql1 = "SELECT count(*) FROM user_playlists WHERE userid = "+user_id+" AND name = '"+playlist_name+"'";
+  var sql1 = "SELECT count(*) FROM user_playlists WHERE username = '"+username+"' AND name = '"+playlist_name+"'";
+
   con.query(sql1, function (err, result, fields) {
     if (err) throw err;
     console.log(result[0]["count(*)"]);
@@ -31,10 +41,11 @@ router.post('/api/v1/playlist', function(req, res, next){
     if(result[0]["count(*)"] != 0)
       return res.status(500).json({message: "playlist name already exists"})
     else{
-      var sql = "INSERT INTO user_playlists (name, userid) values ('"+playlist_name+"', "+user_id+")";
+      var sql = "INSERT INTO user_playlists (name, username) values ('"+playlist_name+"', '"+username+"')";
 
       con.query(sql, function (err, result, fields) {
         if (err) throw err;
+
         return res.json(result);
       });
     }
@@ -44,6 +55,7 @@ router.post('/api/v1/playlist', function(req, res, next){
 
 router.get('/api/v1/user/:userId/playlists/', function(req, res, next){
   var sql = "SELECT * FROM user_playlists WHERE userid = "+req.params.userId;
+  res.setHeader('Access-Control-Allow-Origin', '*');
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     return res.json(result);
@@ -51,6 +63,7 @@ router.get('/api/v1/user/:userId/playlists/', function(req, res, next){
 })
 
 router.post('/api/v1/playlist/:playlistid', function(req, res, next){
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   if(!req.body.songId)
     return res.status(500).json({message: "no song is specified"});
@@ -82,6 +95,8 @@ router.post('/api/v1/playlist/:playlistid', function(req, res, next){
 })
 
 router.get('/api/v1/playlist/:playlistid', function(req, res, next){
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
   var sql = "SELECT * FROM playlist_songs WHERE playlist_id = "+req.params.playlistid;
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
